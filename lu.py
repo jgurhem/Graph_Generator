@@ -2,10 +2,11 @@
 #https://graphs.grevian.org/
 #https://graphviz.readthedocs.io/en/stable/examples.html
 
-import graph_help as gh
+import graph_help.Node as gh
+from graph_help.Graph_dot import Graph
 
 p=4
-myG = gh.Graph("lu" + " p = " + str(p))
+myG = Graph("lu" + " p = " + str(p))
 
 for i in range(p):
 	for j in range(p):

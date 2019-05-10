@@ -2,10 +2,12 @@
 #https://graphs.grevian.org/
 #https://graphviz.readthedocs.io/en/stable/examples.html
 
-import graph_help as gh
+import graph_help.Node as gh
+from graph_help.Graph_dot import Graph
+
 
 p=4
-myG = gh.Graph("sls_g" + " p = " + str(p))
+myG = Graph("sls_g" + " p = " + str(p))
 
 for i in range(p):
 	myG.op_vector_init(gh.Node("B", [i, 0]))
@@ -17,7 +19,7 @@ for k in range(0, p):
 	myG.op_pmv(gh.NodeSimple("inv", [k]), gh.Node("B", [k, k]))
 
 	for i in range(k+1, p):
-		myG.op_pmm2(gh.NodeSimmple("inv", [k]), gh.Node("A", [k, i, k]))
+		myG.op_pmm2(gh.NodeSimple("inv", [k]), gh.Node("A", [k, i, k]))
 
 	for i in range(k+1, p):
 		myG.op_pmv_d(gh.Node("A", [i, k, k]), gh.Node("B", [k, k + 1]), gh.Node("B", [i, k]))
