@@ -74,6 +74,17 @@ class Graph:
     self.__add_dependency(v, v_incr)
     self.__add_dependency(m, v_incr)
 
+  def op_pmm1(self, m1, m2):
+    """m1 = m1 * m2"""
+    if type(m1) is not Node:
+      raise TypeError
+    if type(m2) is not Node:
+      raise TypeError
+    m_incr = m1.incr_last_coord()
+    self.__add_node(m_incr, 'blue')
+    self.__add_dependency(m1, m_incr)
+    self.__add_dependency(m2, m_incr)
+
   def op_pmm2(self, m1, m2):
     """m2 = m1 * m2"""
     if type(m1) is not Node:
@@ -84,7 +95,6 @@ class Graph:
     self.__add_node(m_incr, 'blue')
     self.__add_dependency(m1, m_incr)
     self.__add_dependency(m2, m_incr)
-
 
   def op_pmm_d(self, A, B, C):
     """C = C - A * B"""
