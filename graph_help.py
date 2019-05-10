@@ -1,13 +1,28 @@
+from abc import ABC, abstractmethod
 from graphviz import Digraph
 
-class Node:
+class AbstractNode(ABC):
   def __init__(self, name, coord):
+    super().__init__()
     if type(coord) is not list:
       raise TypeError
-    if len(coord) < 2:
-      raise IndexError
     self.name = name
     self.coord = coord
+
+  @abstractmethod
+  def get_id(self):
+    pass
+
+  @abstractmethod
+  def get_label(self):
+    pass
+
+
+class Node(AbstractNode):
+  def __init__(self, name, coord):
+    super().__init__(name, coord)
+    if len(coord) < 2:
+      raise IndexError
 
   def incr_last_coord(self):
     new_coord = self.coord.copy()
@@ -27,6 +42,17 @@ class Node:
     return l
 
 
+class NodeSimple(AbstractNode):
+  def get_id(self):
+    id_ = self.name
+    for i in range(len(self.coord)):
+      id_ += "-" + str(self.coord[i])
+    return id_
+
+  def get_label(self):
+    return self.get_id()
+
+
 class Graph:
   def __init__(self, gname):
     self.G = Digraph(gname)
@@ -35,39 +61,39 @@ class Graph:
     print(self.G)
 
   def __add_node(self, node, color):
-    if type(node) is not Node:
+    if not isinstance(node, AbstractNode):
       raise TypeError
     self.G.node(node.get_id(), node.get_label(), color = color, style='filled', fontcolor='white')
 
   def __add_dependency(self, fro, to):
-    if type(fro) is not Node:
+    if not isinstance(fro, AbstractNode):
       raise TypeError
-    if type(to) is not Node:
+    if not isinstance(to, AbstractNode):
       raise TypeError
     self.G.edge(fro.get_id(), to.get_id())
 
   def op_vector_init(self, v):
-    if type(v) is not Node:
+    if not isinstance(v, AbstractNode):
       raise TypeError
     self.__add_node(v, 'black')
 
   def op_matrix_init(self, m):
-    if type(m) is not Node:
+    if not isinstance(m, AbstractNode):
       raise TypeError
     self.__add_node(m, 'black')
 
   def op_matrix_inv(self, m_in, m_inv):
-    if type(m_in) is not Node:
+    if not isinstance(m_in, AbstractNode):
       raise TypeError
-    if type(m_inv) is not Node:
+    if not isinstance(m_inv, AbstractNode):
       raise TypeError
     self.__add_node(m_inv, 'red')
     self.__add_dependency(m_in, m_inv)
 
   def op_pmv(self, m, v):
-    if type(m) is not Node:
+    if not isinstance(m, AbstractNode):
       raise TypeError
-    if type(v) is not Node:
+    if not isinstance(v, AbstractNode):
       raise TypeError
     v_incr = v.incr_last_coord()
     self.__add_node(v_incr, 'magenta')
@@ -76,9 +102,9 @@ class Graph:
 
   def op_pmm1(self, m1, m2):
     """m1 = m1 * m2"""
-    if type(m1) is not Node:
+    if not isinstance(m1, AbstractNode):
       raise TypeError
-    if type(m2) is not Node:
+    if not isinstance(m2, AbstractNode):
       raise TypeError
     m_incr = m1.incr_last_coord()
     self.__add_node(m_incr, 'blue')
@@ -87,9 +113,9 @@ class Graph:
 
   def op_pmm2(self, m1, m2):
     """m2 = m1 * m2"""
-    if type(m1) is not Node:
+    if not isinstance(m1, AbstractNode):
       raise TypeError
-    if type(m2) is not Node:
+    if not isinstance(m2, AbstractNode):
       raise TypeError
     m_incr = m2.incr_last_coord()
     self.__add_node(m_incr, 'blue')
@@ -98,11 +124,11 @@ class Graph:
 
   def op_pmm_d(self, A, B, C):
     """C = C - A * B"""
-    if type(A) is not Node:
+    if not isinstance(A, AbstractNode):
       raise TypeError
-    if type(B) is not Node:
+    if not isinstance(B, AbstractNode):
       raise TypeError
-    if type(C) is not Node:
+    if not isinstance(C, AbstractNode):
       raise TypeError
     m_incr = C.incr_last_coord()
     self.__add_node(m_incr, 'darkgreen')
@@ -112,11 +138,11 @@ class Graph:
 
   def op_pmv_d(self, A, b, c):
     """c = c - A * b"""
-    if type(A) is not Node:
+    if not isinstance(A, AbstractNode):
       raise TypeError
-    if type(b) is not Node:
+    if not isinstance(b, AbstractNode):
       raise TypeError
-    if type(c) is not Node:
+    if not isinstance(c, AbstractNode):
       raise TypeError
     v_incr = c.incr_last_coord()
     self.__add_node(v_incr, 'olivedrab2')
