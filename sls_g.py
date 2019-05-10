@@ -3,62 +3,30 @@
 #https://graphviz.readthedocs.io/en/stable/examples.html
 
 from graphviz import Digraph
-
-G2 = Digraph('dep_graph')
-labels = {}
+import graph_help as gh
 
 p=4
+myG = gh.Graph("sls_g" + " p = " + str(p))
 
 for i in range(p):
-	n_name="B-{}-{}".format(i, 0)
-	labels[n_name] = "B-{}".format(i)
-	G2.node(n_name, labels[n_name], color = 'black', style='filled', fontcolor='white')
+	myG.op_vector_init(gh.Node("B", [i, 0]))
 	for j in range(p):
-		n_name="A-{}-{}-{}".format(i, j, 0)
-		labels[n_name] = "A-{}-{}".format(i, j)
-		G2.node(n_name, labels[n_name], color = 'black', style='filled', fontcolor='white')
+		myG.op_matrix_init(gh.Node("A", [i, j, 0]))
 	
 for k in range(0, p):
-	n_name="A-{}-{}-{}".format(k, k, k+1)
-	labels[n_name] = "A-{}-{}".format(k, k)
-	G2.node(n_name, labels[n_name], color = 'red', style='filled', fontcolor='white')
-	G2.edge("A-{}-{}-{}".format(k, k, k), n_name)
+	myG.op_matrix_inv(gh.Node("A", [k, k, k]), gh.Node("A", [k, k, k + 1]))
+	myG.op_pmv(gh.Node("A", [k, k, k + 1]), gh.Node("B", [k, k]))
 
-	n_name="B-{}-{}".format(k, k+1)
-	labels[n_name] = "B-{}".format(k)
-	G2.node(n_name, labels[n_name], color = 'magenta', style='filled', fontcolor='white')
-	G2.edge("A-{}-{}-{}".format(k, k, k+1), n_name)
-	G2.edge("B-{}-{}".format(k, k), n_name)
-	
 	for i in range(k+1, p):
-		n_name="A-{}-{}-{}".format(k, i, k+1)
-		labels[n_name] = "A-{}-{}".format(k, i)
-		G2.node(n_name, labels[n_name], color = 'blue', style='filled', fontcolor='white')
-		G2.edge("A-{}-{}-{}".format(k, k, k+1), n_name)
-		G2.edge("A-{}-{}-{}".format(k, i, k), n_name)
-	
+		myG.op_pmm2(gh.Node("A", [k, k, k + 1]), gh.Node("A", [k, i, k]))
+
 	for i in range(k+1, p):
-		n_name="B-{}-{}".format(i, k+1)
-		labels[n_name] = "B-{}".format(i)
-		G2.node(n_name, labels[n_name], color = 'olivedrab2', style='filled', fontcolor='white')
-		G2.edge("B-{}-{}".format(i, k), n_name)
-		G2.edge("B-{}-{}".format(k, k+1), n_name)
-		G2.edge("A-{}-{}-{}".format(i, k, k), n_name)
+		myG.op_pmv_d(gh.Node("A", [i, k, k]), gh.Node("B", [k, k + 1]), gh.Node("B", [i, k]))
 		for j in range(k+1, p):
-			n_name="A-{}-{}-{}".format(i, j, k+1)
-			labels[n_name] = "A-{}-{}".format(i, j)
-			G2.node(n_name, labels[n_name], color = 'darkgreen', style='filled', fontcolor='white')
-			G2.edge("A-{}-{}-{}".format(i, j, k), n_name)
-			G2.edge("A-{}-{}-{}".format(i, k, k), n_name)
-			G2.edge("A-{}-{}-{}".format(k, j, k+1), n_name)
+			myG.op_pmm_d(gh.Node("A", [i, k, k]), gh.Node("A", [k, j, k + 1]), gh.Node("A", [i, j, k]))
 
 for k in range(1, p):
 	for i in range(0, p-k):
-		n_name="B-{}-{}".format(i, k+1+i)
-		labels[n_name] = "B-{}".format(i)
-		G2.node(n_name, labels[n_name], color = 'olivedrab2', style='filled', fontcolor='white')
-		G2.edge("B-{}-{}".format(i, k+i), n_name)
-		G2.edge("B-{}-{}".format(p-k, p), n_name)
-		G2.edge("A-{}-{}-{}".format(i, p-k, i+1), n_name)
-	
-print(G2.source)
+		myG.op_pmv_d(gh.Node("A", [i, p - k, i + 1]), gh.Node("B", [p - k, p]), gh.Node("B", [i, k + i]))
+
+myG.graph_print()
