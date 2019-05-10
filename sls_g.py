@@ -2,7 +2,6 @@
 #https://graphs.grevian.org/
 #https://graphviz.readthedocs.io/en/stable/examples.html
 
-from graphviz import Digraph
 import graph_help as gh
 
 p=4
@@ -14,11 +13,11 @@ for i in range(p):
 		myG.op_matrix_init(gh.Node("A", [i, j, 0]))
 	
 for k in range(0, p):
-	myG.op_matrix_inv(gh.Node("A", [k, k, k]), gh.Node("A", [k, k, k + 1]))
-	myG.op_pmv(gh.Node("A", [k, k, k + 1]), gh.Node("B", [k, k]))
+	myG.op_matrix_inv(gh.Node("A", [k, k, k]), gh.NodeSimple("inv", [k]))
+	myG.op_pmv(gh.NodeSimple("inv", [k]), gh.Node("B", [k, k]))
 
 	for i in range(k+1, p):
-		myG.op_pmm2(gh.Node("A", [k, k, k + 1]), gh.Node("A", [k, i, k]))
+		myG.op_pmm2(gh.NodeSimmple("inv", [k]), gh.Node("A", [k, i, k]))
 
 	for i in range(k+1, p):
 		myG.op_pmv_d(gh.Node("A", [i, k, k]), gh.Node("B", [k, k + 1]), gh.Node("B", [i, k]))
