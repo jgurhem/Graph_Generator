@@ -1,7 +1,8 @@
 from .Node import AbstractNode
+from .AbstractGraph import AbstractGraph
 from graphviz import Digraph
 
-class Graph:
+class Graph(AbstractGraph):
   def __init__(self, gname):
     self.G = Digraph(gname)
 
@@ -9,40 +10,26 @@ class Graph:
     print(self.G)
 
   def __add_node(self, node, color):
-    if not isinstance(node, AbstractNode):
-      raise TypeError
     self.G.node(node.get_id(), node.get_label(), color = color, style='filled', fontcolor='white')
 
   def __add_dependency(self, fro, to):
-    if not isinstance(fro, AbstractNode):
-      raise TypeError
-    if not isinstance(to, AbstractNode):
-      raise TypeError
     self.G.edge(fro.get_id(), to.get_id())
 
   def op_vector_init(self, v):
-    if not isinstance(v, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_vector_init(v)
     self.__add_node(v, 'black')
 
   def op_matrix_init(self, m):
-    if not isinstance(m, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_matrix_init(m)
     self.__add_node(m, 'black')
 
   def op_matrix_inv(self, m_in, m_inv):
-    if not isinstance(m_in, AbstractNode):
-      raise TypeError
-    if not isinstance(m_inv, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_matrix_inv(m_in, m_inv)
     self.__add_node(m_inv, 'red')
     self.__add_dependency(m_in, m_inv)
 
   def op_pmv(self, m, v):
-    if not isinstance(m, AbstractNode):
-      raise TypeError
-    if not isinstance(v, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_pmv(m, v)
     v_incr = v.incr_last_coord()
     self.__add_node(v_incr, 'magenta')
     self.__add_dependency(v, v_incr)
@@ -50,10 +37,7 @@ class Graph:
 
   def op_pmm1(self, m1, m2):
     """m1 = m1 * m2"""
-    if not isinstance(m1, AbstractNode):
-      raise TypeError
-    if not isinstance(m2, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_pmm1(m1, m2)
     m_incr = m1.incr_last_coord()
     self.__add_node(m_incr, 'blue')
     self.__add_dependency(m1, m_incr)
@@ -61,10 +45,7 @@ class Graph:
 
   def op_pmm2(self, m1, m2):
     """m2 = m1 * m2"""
-    if not isinstance(m1, AbstractNode):
-      raise TypeError
-    if not isinstance(m2, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_pmm2(m1, m2)
     m_incr = m2.incr_last_coord()
     self.__add_node(m_incr, 'blue')
     self.__add_dependency(m1, m_incr)
@@ -72,12 +53,7 @@ class Graph:
 
   def op_pmm_d(self, A, B, C):
     """C = C - A * B"""
-    if not isinstance(A, AbstractNode):
-      raise TypeError
-    if not isinstance(B, AbstractNode):
-      raise TypeError
-    if not isinstance(C, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_pmm_d(A, B, C)
     m_incr = C.incr_last_coord()
     self.__add_node(m_incr, 'darkgreen')
     self.__add_dependency(A, m_incr)
@@ -86,12 +62,7 @@ class Graph:
 
   def op_pmv_d(self, A, b, c):
     """c = c - A * b"""
-    if not isinstance(A, AbstractNode):
-      raise TypeError
-    if not isinstance(b, AbstractNode):
-      raise TypeError
-    if not isinstance(c, AbstractNode):
-      raise TypeError
+    super(Graph, self).op_pmv_d(A, b, c)
     v_incr = c.incr_last_coord()
     self.__add_node(v_incr, 'olivedrab2')
     self.__add_dependency(A, v_incr)
