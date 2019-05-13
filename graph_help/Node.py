@@ -16,6 +16,9 @@ class AbstractNode(ABC):
   def get_label(self):
     pass
 
+  def __str__(self):
+    return self.name + " " + str(self.coord)
+
 
 class Node(AbstractNode):
   def __init__(self, name, coord):
