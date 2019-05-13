@@ -24,7 +24,7 @@ class Node(AbstractNode):
       raise IndexError
 
   def incr_last_coord(self):
-    new_coord = self.coord.copy()
+    new_coord = list(self.coord)
     new_coord[len(new_coord) - 1] += 1
     return Node(self.name, new_coord)
 
