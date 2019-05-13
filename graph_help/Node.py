@@ -1,8 +1,16 @@
-from abc import ABC, abstractmethod
+import sys
+from abc import abstractmethod
+
+if sys.version_info.major == 2:
+  from abc import ABCMeta
+  class ABC:
+    __metaclass__ = ABCMeta
+elif sys.version_info.major == 3:
+  from abc import ABC
 
 class AbstractNode(ABC):
   def __init__(self, name, coord):
-    super().__init__()
+    super(AbstractNode, self).__init__()
     if type(coord) is not list:
       raise TypeError
     self.name = name
@@ -22,7 +30,7 @@ class AbstractNode(ABC):
 
 class Node(AbstractNode):
   def __init__(self, name, coord):
-    super().__init__(name, coord)
+    super(Node, self).__init__(name, coord)
     if len(coord) < 2:
       raise IndexError
 
