@@ -35,6 +35,7 @@ class AbstractGraph(ABC):
 
   @abstractmethod
   def op_pmv(self, m, v):
+    """v = m * v"""
     if not isinstance(m, AbstractNode):
       raise TypeError
     if not isinstance(v, AbstractNode):
