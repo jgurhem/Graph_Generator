@@ -7,7 +7,7 @@ from graph_help.Graph_dot import Graph
 
 
 p=4
-myG = Graph("sls_g" + " p = " + str(p))
+myG = Graph("sls_g" + "_p" + str(p))
 
 for i in range(p):
 	myG.op_vector_init(gh.Node("B", [i, 0]))
