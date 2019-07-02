@@ -31,4 +31,9 @@ for k in range(1, p):
 	for i in range(0, p-k):
 		myG.op_pmv_d(gh.Node("A", [i, p - k, i + 1]), gh.Node("B", [p - k, p]), gh.Node("B", [i, k + i]))
 
-myG.graph_print()
+if in_var.pdot:
+  myG.graph_print()
+if in_var.wdot:
+  myG.graph_write()
+if in_var.pdep:
+  myG.graph_print_dep(in_var.show.split(":"))

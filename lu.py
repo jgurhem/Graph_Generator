@@ -21,4 +21,10 @@ for k in range(0, p - 1):
 		for j in range(k+1, p):
 			myG.op_pmm_d(gh.Node("A", [i, k, k + 1]), gh.Node("A", [k, j, k]), gh.Node("A", [i, j, k]))
 
-myG.graph_print()
+
+if in_var.pdot:
+  myG.graph_print()
+if in_var.wdot:
+  myG.graph_write()
+if in_var.pdep:
+  myG.graph_print_dep(in_var.show.split(":"))
