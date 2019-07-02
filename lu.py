@@ -4,8 +4,10 @@
 
 import graph_help.Node as gh
 from graph_help.Graph_dot import Graph
+import graph_help.ParseInputArg as pia
 
-p=4
+in_var = pia.parse_input_arg()
+p = in_var.N
 myG = Graph("lu" + "_p" + str(p))
 
 for i in range(p):
