@@ -73,6 +73,12 @@ class Graph(AbstractGraph):
     self.__add_dependency(b, v_incr)
     self.__add_dependency(c, v_incr)
 
+  def op_sls(self, m, v):
+    super(Graph, self).op_sls(m, v)
+    v_incr = v.incr_last_coord()
+    self.__add_node(v_incr, 'cyan3', 'sls')
+    self.__add_dependency(v, v_incr)
+    self.__add_dependency(m, v_incr)
 
   def graph_print_dep(self, show=['']):
     for n in self.G.nodes():

@@ -77,5 +77,11 @@ class AbstractGraph(ABC):
     if not isinstance(c, AbstractNode):
       raise TypeError
 
-
+  @abstractmethod
+  def op_sls(self, m, v):
+    """v = solve (A x = v)"""
+    if not isinstance(m, AbstractNode):
+      raise TypeError
+    if not isinstance(v, AbstractNode):
+      raise TypeError
 
