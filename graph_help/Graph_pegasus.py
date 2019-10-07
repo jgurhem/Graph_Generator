@@ -8,9 +8,23 @@ class Graph(AbstractGraph):
   def __init__(self, gname, options):
     self.gname = gname
     self.bs = int(options.datasize / options.N)
+    self.bin_dir = options.bin_dir
     self.G = ADAG(gname)
     self.jobs = dict()
     random.seed(1)
+    self.__add_executable("initv")
+    self.__add_executable("initm")
+    self.__add_executable("pmv")
+    self.__add_executable("pmv_d")
+    self.__add_executable("pmm1")
+    self.__add_executable("pmm2")
+    self.__add_executable("pmm_d")
+    self.__add_executable("inv_gj")
+
+  def __add_executable(self, exe):
+    e = Executable(namespace=self.gname, name=exe, os="linux", arch="x86_64")
+    e.addPFN(PFN("file://" + self.bin_dir + "/" + exe, "local"))
+    self.G.addExecutable(e)
 
   def graph_print(self):
     self.G.writeXML(sys.stdout)
