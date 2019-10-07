@@ -133,4 +133,17 @@ class Graph(AbstractGraph):
     j.uses(vi_f, link=Link.OUTPUT)
     j.addArguments(str(self.bs), A_f, b_f, c_f, vi_f)
 
+  def op_sls(self, m, v):
+    super(Graph, self).op_sls(m, v)
+    v_incr = v.incr_last_coord()
+    j = self.__create_job(v_incr, "sls")
+    self.__add_dependency(v, v_incr)
+    self.__add_dependency(m, v_incr)
+    m_f = File(m.get_id())
+    j.uses(m_f, link=Link.INPUT)
+    v_f = File(v.get_id())
+    j.uses(v_f, link=Link.INPUT)
+    vi_f = File(v_incr.get_id())
+    j.uses(vi_f, link=Link.OUTPUT)
+    j.addArguments(str(self.bs), m_f, v_f, vi_f)
 
