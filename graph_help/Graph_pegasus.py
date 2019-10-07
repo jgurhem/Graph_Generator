@@ -5,9 +5,9 @@ import sys
 import random
 
 class Graph(AbstractGraph):
-  def __init__(self, gname, **kwargs):
+  def __init__(self, gname, options):
     self.gname = gname
-    self.bs = kwargs.get("blocksize", 4)
+    self.bs = int(options.datasize / options.N)
     self.G = ADAG(gname)
     self.jobs = dict()
     random.seed(1)

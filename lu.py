@@ -3,12 +3,12 @@
 #https://graphviz.readthedocs.io/en/stable/examples.html
 
 import graph_help.Node as gh
-from graph_help.Graph_dot import Graph
 import graph_help.ParseInputArg as pia
+from graph_help.Graph import GraphGenerator
 
 in_var = pia.parse_input_arg()
 p = in_var.N
-myG = Graph("lu" + "_p" + str(p))
+myG = GraphGenerator("lu" + "_p" + str(p), in_var)
 
 for i in range(p):
 	for j in range(p):
