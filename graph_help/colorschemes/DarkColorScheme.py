@@ -4,6 +4,7 @@ class DarkColorScheme(DefaultColorScheme):
   def __init__(self):
     self.colors = dict()
     self.colors['background'] = 'black'
+    self.colors['edge'] = 'white'
     self.colors['fontcolor'] = 'black'
     self.colors['initv'] = 'white'
     self.colors['initm'] = 'white'

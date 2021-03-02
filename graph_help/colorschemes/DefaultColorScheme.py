@@ -12,6 +12,7 @@ class DefaultColorScheme(ABC):
   def __init__(self):
     self.colors = dict()
     self.colors['background'] = 'white'
+    self.colors['edge'] = 'black'
     self.colors['fontcolor'] = 'white'
     self.colors['initv'] = 'black'
     self.colors['initm'] = 'black'
