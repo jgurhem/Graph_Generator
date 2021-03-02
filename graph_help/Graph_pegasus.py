@@ -8,9 +8,23 @@ class Graph(AbstractGraph):
   def __init__(self, gname, options):
     self.gname = gname
     self.bs = int(options.datasize / options.N)
+    self.bin_dir = options.bin_dir
     self.G = ADAG(gname)
     self.jobs = dict()
     random.seed(1)
+    self.__add_executable("initv")
+    self.__add_executable("initm")
+    self.__add_executable("pmv")
+    self.__add_executable("pmv_d")
+    self.__add_executable("pmm1")
+    self.__add_executable("pmm2")
+    self.__add_executable("pmm_d")
+    self.__add_executable("inv_gj")
+
+  def __add_executable(self, exe):
+    e = Executable(namespace=self.gname, name=exe, os="linux", arch="x86_64")
+    e.addPFN(PFN("file://" + self.bin_dir + "/" + exe, "local"))
+    self.G.addExecutable(e)
 
   def graph_print(self):
     self.G.writeXML(sys.stdout)
@@ -32,14 +46,14 @@ class Graph(AbstractGraph):
   def op_vector_init(self, v):
     super(Graph, self).op_vector_init(v)
     j = self.__create_job(v, "initv")
-    a = File(v.get_label())
+    a = File(v.get_id())
     j.uses(a, link=Link.OUTPUT)
     j.addArguments(str(self.bs), str(random.random()), a)
 
   def op_matrix_init(self, m):
     super(Graph, self).op_matrix_init(m)
     j = self.__create_job(m, "initm")
-    a = File(m.get_label())
+    a = File(m.get_id())
     j.uses(a, link=Link.OUTPUT)
     j.addArguments(str(self.bs), str(self.bs), str(random.random()), a)
 
@@ -47,9 +61,9 @@ class Graph(AbstractGraph):
     super(Graph, self).op_matrix_inv(m_in, m_inv)
     j = self.__create_job(m_inv, "inv_gj")
     self.__add_dependency(m_in, m_inv)
-    a = File(m_in.get_label())
+    a = File(m_in.get_id())
     j.uses(a, link=Link.INPUT)
-    inv = File(m_inv.get_label())
+    inv = File(m_inv.get_id())
     j.uses(inv, link=Link.OUTPUT)
     j.addArguments(str(self.bs), a, inv)
 
@@ -59,11 +73,13 @@ class Graph(AbstractGraph):
     j = self.__create_job(v_incr, "pmv")
     self.__add_dependency(v, v_incr)
     self.__add_dependency(m, v_incr)
-    a_f = File(m.get_label())
-    j.uses(a_f, link=Link.INPUT)
-    v_f = File(v.get_label())
-    j.uses(v_f, link=Link.INOUT)
-    j.addArguments(str(self.bs), a_f, v_f)
+    m_f = File(m.get_id())
+    j.uses(m_f, link=Link.INPUT)
+    v_f = File(v.get_id())
+    j.uses(v_f, link=Link.INPUT)
+    vi_f = File(v_incr.get_id())
+    j.uses(vi_f, link=Link.OUTPUT)
+    j.addArguments(str(self.bs), m_f, v_f, vi_f)
 
   def op_pmm1(self, m1, m2):
     """m1 = m1 * m2"""
@@ -72,11 +88,13 @@ class Graph(AbstractGraph):
     j = self.__create_job(m_incr, "pmm1")
     self.__add_dependency(m1, m_incr)
     self.__add_dependency(m2, m_incr)
-    m1_f = File(m1.get_label())
-    j.uses(m1_f, link=Link.INOUT)
-    m2_f = File(m2.get_label())
+    m1_f = File(m1.get_id())
+    j.uses(m1_f, link=Link.INPUT)
+    m2_f = File(m2.get_id())
     j.uses(m2_f, link=Link.INPUT)
-    j.addArguments(str(self.bs), m1_f, m2_f)
+    mi_f = File(m_incr.get_id())
+    j.uses(mi_f, link=Link.OUTPUT)
+    j.addArguments(str(self.bs), m1_f, m2_f, mi_f)
 
   def op_pmm2(self, m1, m2):
     """m2 = m1 * m2"""
@@ -85,11 +103,13 @@ class Graph(AbstractGraph):
     j = self.__create_job(m_incr, "pmm2")
     self.__add_dependency(m1, m_incr)
     self.__add_dependency(m2, m_incr)
-    m1_f = File(m1.get_label())
+    m1_f = File(m1.get_id())
     j.uses(m1_f, link=Link.INPUT)
-    m2_f = File(m2.get_label())
-    j.uses(m2_f, link=Link.INOUT)
-    j.addArguments(str(self.bs), m1_f, m2_f)
+    m2_f = File(m2.get_id())
+    j.uses(m2_f, link=Link.INPUT)
+    mi_f = File(m_incr.get_id())
+    j.uses(mi_f, link=Link.OUTPUT)
+    j.addArguments(str(self.bs), m1_f, m2_f, mi_f)
 
   def op_pmm_d(self, A, B, C):
     """C = C - A * B"""
@@ -99,13 +119,15 @@ class Graph(AbstractGraph):
     self.__add_dependency(A, m_incr)
     self.__add_dependency(B, m_incr)
     self.__add_dependency(C, m_incr)
-    A_f = File(A.get_label())
+    A_f = File(A.get_id())
     j.uses(A_f, link=Link.INPUT)
-    B_f = File(B.get_label())
+    B_f = File(B.get_id())
     j.uses(B_f, link=Link.INPUT)
-    C_f = File(C.get_label())
-    j.uses(C_f, link=Link.INOUT)
-    j.addArguments(str(self.bs), A_f, B_f, C_f)
+    C_f = File(C.get_id())
+    j.uses(C_f, link=Link.INPUT)
+    mi_f = File(m_incr.get_id())
+    j.uses(mi_f, link=Link.OUTPUT)
+    j.addArguments(str(self.bs), A_f, B_f, C_f, mi_f)
 
   def op_pmv_d(self, A, b, c):
     """c = c - A * b"""
@@ -115,12 +137,27 @@ class Graph(AbstractGraph):
     self.__add_dependency(A, v_incr)
     self.__add_dependency(b, v_incr)
     self.__add_dependency(c, v_incr)
-    A_f = File(A.get_label())
+    A_f = File(A.get_id())
     j.uses(A_f, link=Link.INPUT)
-    b_f = File(b.get_label())
+    b_f = File(b.get_id())
     j.uses(b_f, link=Link.INPUT)
-    c_f = File(c.get_label())
-    j.uses(c_f, link=Link.INOUT)
-    j.addArguments(str(self.bs), A_f, b_f, c_f)
+    c_f = File(c.get_id())
+    j.uses(c_f, link=Link.INPUT)
+    vi_f = File(v_incr.get_id())
+    j.uses(vi_f, link=Link.OUTPUT)
+    j.addArguments(str(self.bs), A_f, b_f, c_f, vi_f)
 
+  def op_sls(self, m, v):
+    super(Graph, self).op_sls(m, v)
+    v_incr = v.incr_last_coord()
+    j = self.__create_job(v_incr, "sls")
+    self.__add_dependency(v, v_incr)
+    self.__add_dependency(m, v_incr)
+    m_f = File(m.get_id())
+    j.uses(m_f, link=Link.INPUT)
+    v_f = File(v.get_id())
+    j.uses(v_f, link=Link.INPUT)
+    vi_f = File(v_incr.get_id())
+    j.uses(vi_f, link=Link.OUTPUT)
+    j.addArguments(str(self.bs), m_f, v_f, vi_f)
 

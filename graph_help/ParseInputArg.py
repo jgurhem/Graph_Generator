@@ -12,5 +12,8 @@ def parse_input_arg():
   parser.add_option("--datasize", dest="datasize", action="store", help="Size of the global matrix", default=16, type=int)
 
   parser.add_option("--fontsize", dest="fontsize", help="Dot graph font size", default=10, type=int)
+
+  parser.add_option("--bin_dir", dest="bin_dir", action="store", help="Bin directory containing the applications", default="", type=str)
+
   (options, args) = parser.parse_args()
   return options
