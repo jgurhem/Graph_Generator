@@ -68,7 +68,7 @@ class Graph(AbstractGraph):
     """c = c - A * b"""
     super(Graph, self).op_pmv_d(A, b, c)
     v_incr = c.incr_last_coord()
-    self.__add_node(v_incr, 'olivedrab2', 'pmv_d')
+    self.__add_node(v_incr, 'darkolivegreen3', 'pmv_d')
     self.__add_dependency(A, v_incr)
     self.__add_dependency(b, v_incr)
     self.__add_dependency(c, v_incr)
