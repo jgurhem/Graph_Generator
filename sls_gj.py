@@ -10,6 +10,7 @@ in_var = pia.parse_input_arg()
 p = in_var.N
 myG = GraphGenerator("sls_gj" + "_p" + str(p), in_var)
 myG.set_fontsize(in_var.fontsize)
+myG.set_colorscheme(in_var.colorscheme)
 
 for i in range(p):
 	myG.op_vector_init(gh.Node("B", [i, 0]))
