@@ -6,6 +6,10 @@ class Graph(AbstractGraph):
   def __init__(self, gname):
     self.G = pgv.AGraph(strict=False, directed=True)
     self.gname=gname
+    self.fontsize = 10
+
+  def set_fontsize(self, fontsize):
+    self.fontsize = fontsize
 
   def graph_print(self):
     print(self.G.string())
@@ -14,7 +18,7 @@ class Graph(AbstractGraph):
     self.G.write(self.gname + ".dot")
 
   def __add_node(self, node, color, op):
-    self.G.add_node(node.get_id(), label=node.get_id(), color=color, style='filled', fontcolor='white', op=op)
+    self.G.add_node(node.get_id(), label=node.get_id(), color=color, style='filled', fontcolor='white', op=op, fontsize=self.fontsize)
 
   def __add_dependency(self, fro, to):
     self.G.add_edge(fro.get_id(), to.get_id())

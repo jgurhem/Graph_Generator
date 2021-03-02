@@ -9,6 +9,7 @@ from graph_help.Graph import GraphGenerator
 in_var = pia.parse_input_arg()
 p = in_var.N
 myG = GraphGenerator("sls_g" + "_p" + str(p), in_var)
+myG.set_fontsize(in_var.fontsize)
 
 for i in range(p):
 	myG.op_vector_init(gh.Node("B", [i, 0]))

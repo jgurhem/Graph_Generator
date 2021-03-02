@@ -9,6 +9,7 @@ from graph_help.Graph import GraphGenerator
 in_var = pia.parse_input_arg()
 p = in_var.N
 myG = GraphGenerator("lu" + "_p" + str(p), in_var)
+myG.set_fontsize(in_var.fontsize)
 
 for i in range(p):
 	for j in range(p):
