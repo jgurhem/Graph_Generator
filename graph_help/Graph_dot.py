@@ -30,7 +30,7 @@ class Graph(AbstractGraph):
     self.G.add_node(node.get_id(), label=node.get_id(), color=self.colorscheme[op], style='filled', fontcolor=self.colorscheme['fontcolor'], op=op, fontsize=self.fontsize)
 
   def __add_dependency(self, fro, to):
-    self.G.add_edge(fro.get_id(), to.get_id(), color=self.colorscheme['edge'])
+    self.G.add_edge(fro.get_id(), to.get_id(), color=self.colorscheme['edge'], penwidth=4, arrowsize=4)
 
   def op_vector_init(self, v):
     super(Graph, self).op_vector_init(v)
